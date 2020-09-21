@@ -5,15 +5,14 @@ import store from './store';
 //need an event listener
 const callDogAPI = function(){
   fetch(`https://dog.ceo/api/breeds/image/random/${store.userNum}`)
-    .then(response => response.json)
+    .then(response => response.json())
     .then(responseJSON => parseDogs(responseJSON));
-  console.log('API called');
+  
 };
 
-const parseDogs = function(dogArray){
-  dogArray.message.forEach(dog => {
-    store.dogImages.push(dog);
-  });
+const parseDogs = function(dogObject){
+  store.dogImages = dogObject.message;
+  store.dogImages.forEach(dog => console.log(dog));
   console.log('dogs acquired');
 };
 
@@ -21,16 +20,15 @@ const parseDogs = function(dogArray){
 
 
 const handleSubmitClick = function(){
-  $('js-submit').on('submit', event =>{
+  $('#js-dog-form').on('submit', event =>{
     event.preventDefault();
     if($('#js-dog-count').val()){
       store.userNum = parseInt($('#js-dog-count').val());
+      console.log('you entered a number');
     }
+    callDogAPI();
+    // calls API for set number of times and adds all of the dog images to an array
     
-    for(let i = 0; i < store.userNum; i++){
-      store.dogImages = callDogAPI();
-      // calls API for set number of times and adds all of the dog images to an array
-    }
     //render function
     console.log(store.dogImages);
   });
