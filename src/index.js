@@ -6,17 +6,32 @@ import store from './store';
 const callDogAPI = function(){
   fetch(`https://dog.ceo/api/breeds/image/random/${store.userNum}`)
     .then(response => response.json())
-    .then(responseJSON => parseDogs(responseJSON));
+    .then(responseJSON => parseDogs(responseJSON))
   
 };
 
 const parseDogs = function(dogObject){
   store.dogImages = dogObject.message;
-  store.dogImages.forEach(dog => console.log(dog));
+  store.dogImages.forEach(dog => store.imageTemplates.push(createTemplate(dog)));
+  render();
   console.log('dogs acquired');
 };
 
-//const render = function render(){};
+const createTemplate = function(imageURL){
+  console.log('template created');
+  return `<div><img src = '${imageURL}' width = '200px' height = '200px alt='cute dog photo'></div>`;
+};
+
+const createHTMLString = function(){
+  let HTMLString = '';
+  store.imageTemplates.forEach(template => HTMLString = `${HTMLString}${template}`);
+  console.log('string created');
+  return HTMLString;
+};
+const render = function(){
+  $('.dog-imgs').html(createHTMLString());
+  console.log('rendered');
+};
 
 
 const handleSubmitClick = function(){
