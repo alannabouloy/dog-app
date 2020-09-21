@@ -4,15 +4,17 @@ import store from './store';
 //funciton that loops through store.dogImages and creates html format for each
 //need an event listener
 const callDogAPI = function(){
-  fetch(`https://dog.ceo/api/breeds/image/random/${store.userNum}`)
+  fetch(`https://dog.ceo/api/breed/${store.userBreed}/images/random`)
+    .catch(error => alert('404: Oh no! We could not find this breed :('))
     .then(response => response.json())
-    .then(responseJSON => parseDogs(responseJSON))
+    .then(responseJSON => parseDogs(responseJSON));
+    
   
 };
 
 const parseDogs = function(dogObject){
   store.dogImages = dogObject.message;
-  store.dogImages.forEach(dog => store.imageTemplates.push(createTemplate(dog)));
+  store.imageTemplates.push(createTemplate(store.dogImages));
   render();
   console.log('dogs acquired');
 };
@@ -38,14 +40,14 @@ const handleSubmitClick = function(){
   $('#js-dog-form').on('submit', event =>{
     event.preventDefault();
     if($('#js-dog-count').val()){
-      store.userNum = parseInt($('#js-dog-count').val());
-      console.log('you entered a number');
+      store.userBreed = $('#js-dog-count').val();
+      console.log('you entered a breed');
     }
     callDogAPI();
     // calls API for set number of times and adds all of the dog images to an array
     
     //render function
-    console.log(store.dogImages);
+    console.log('you submitted a breed!');
   });
 };
 //a call to the api
